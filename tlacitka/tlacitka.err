@@ -1,0 +1,22 @@
+Warning[207] D:\RP\TLACITKA\TLACITKA.ASM 11 : Found label after column 1. (pombity)
+Warning[207] D:\RP\TLACITKA\TLACITKA.ASM 12 : Found label after column 1. (reg2)
+Warning[207] D:\RP\TLACITKA\TLACITKA.ASM 13 : Found label after column 1. (reg1)
+Warning[207] D:\RP\TLACITKA\TLACITKA.ASM 14 : Found label after column 1. (pom)
+Warning[207] D:\RP\TLACITKA\TLACITKA.ASM 15 : Found label after column 1. (pom2)
+Warning[207] D:\RP\TLACITKA\TLACITKA.ASM 16 : Found label after column 1. (port)
+Warning[207] D:\RP\TLACITKA\TLACITKA.ASM 17 : Found label after column 1. (pred)
+Warning[207] D:\RP\TLACITKA\TLACITKA.ASM 18 : Found label after column 1. (cekani)
+Message[305] D:\RP\TLACITKA\TLACITKA.ASM 33 : Using default destination of 1 (file).
+Message[302] D:\RP\TLACITKA\TLACITKA.ASM 46 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\TLACITKA\TLACITKA.ASM 53 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\TLACITKA\TLACITKA.ASM 104 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\TLACITKA\TLACITKA.ASM 105 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\TLACITKA\TLACITKA.ASM 106 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\TLACITKA\TLACITKA.ASM 107 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\TLACITKA\TLACITKA.ASM 108 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[202] D:\RP\TLACITKA\TLACITKA.ASM 125 : Argument out of range.  Least significant bits used.
+Warning[202] D:\RP\TLACITKA\TLACITKA.ASM 132 : Argument out of range.  Least significant bits used.
+Message[305] D:\RP\TLACITKA\TLACITKA.ASM 136 : Using default destination of 1 (file).
+Message[305] D:\RP\TLACITKA\TLACITKA.ASM 138 : Using default destination of 1 (file).
+Message[305] D:\RP\TLACITKA\TLACITKA.ASM 144 : Using default destination of 1 (file).
+Message[305] D:\RP\TLACITKA\TLACITKA.ASM 150 : Using default destination of 1 (file).

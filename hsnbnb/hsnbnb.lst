@@ -1,0 +1,913 @@
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;*****************************************************************************************************
+                      00002 ;  hodiny s nastavenim bez nastaveni budiku
+                      00003 ;*****************************************************************************************************
+                      00004 ;       ................................................................................................
+                            ..
+                      00005 ;       Definice symbolu
+                      00006 ;       ................................................................................................
+                            ..
+                      00007                                 list            p=16F877A                               ; deklarece proc
+                            esoru
+                      00008                                 include         "d:\p16f877a.inc"               ; deklarece registru
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00398         LIST
+2007   3F31           00009                                 __config        3F31h                                   ; konfiguracni p
+                            ojistky
+                      00010 ;       ................................................................................................
+                            ..
+Warning[207]: Found label after column 1. (vteriny)
+  00000022            00011                                 vteriny         equ             22h
+Warning[207]: Found label after column 1. (disp1)
+  00000023            00012                                 disp1           equ             23h
+Warning[207]: Found label after column 1. (disp2)
+  00000025            00013                                 disp2           equ             25h
+Warning[207]: Found label after column 1. (disp3)
+  00000024            00014                                 disp3           equ             24h
+Warning[207]: Found label after column 1. (disp4)
+  00000026            00015                                 disp4           equ             26h
+Warning[207]: Found label after column 1. (pordisp)
+  00000027            00016                                 pordisp         equ             27h
+Warning[207]: Found label after column 1. (sec)
+  00000028            00017                                 sec                     equ             28h
+                      00018 
+Warning[207]: Found label after column 1. (pre1)
+  00000029            00019                                 pre1            equ             29h
+Warning[207]: Found label after column 1. (pre2)
+  0000002A            00020                                 pre2            equ             2ah
+Warning[207]: Found label after column 1. (wreg)
+  0000002B            00021                                 wreg            equ             2bh     
+                      00022 
+Warning[207]: Found label after column 1. (pombity)
+  00000021            00023                                 pombity         equ             21h
+Warning[207]: Found label after column 1. (reg2)
+  0000002C            00024                                 reg2            equ             2ch
+Warning[207]: Found label after column 1. (reg1)
+  0000002D            00025                                 reg1            equ             2dh
+Warning[207]: Found label after column 1. (pom)
+  0000002E            00026                                 pom                     equ             2eh
+Warning[207]: Found label after column 1. (pom2)
+  0000002F            00027                                 pom2            equ             2fh     
+                      00028 
+Warning[207]: Found label after column 1. (budik1)
+  00000033            00029                                 budik1          equ             33h
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[207]: Found label after column 1. (budik2)
+  00000034            00030                                 budik2          equ             34h
+Warning[207]: Found label after column 1. (budik3)
+  00000035            00031                                 budik3          equ             35h
+Warning[207]: Found label after column 1. (budik4)
+  00000036            00032                                 budik4          equ             36h     
+                      00033 ; new                           
+Warning[207]: Found label after column 1. (port)
+  00000030            00034                                 port            equ             30h
+Warning[207]: Found label after column 1. (pred)
+  00000031            00035                                 pred            equ             31h
+Warning[207]: Found label after column 1. (cekani)
+  00000032            00036                                 cekani          equ             32h
+                      00037 ;       ................................................................................................
+                            ..
+                      00038                                 #define         rp0             STATUS,5                ; volba stranky 
+                            pameti dat
+                      00039                                 #define         c               STATUS,0                ; carry
+                      00040                                 #define         z               STATUS,2                ; zero
+                      00041                                 #define         toif    INTCON,2                ; indikace preteceni TMR
+                            0
+                      00042                                 #define     toie        INTCON,5                ; spusteni TMR0
+                      00043                                 #define         gie             INTCON,7
+                      00044 
+                      00045                                 #define         indbzuc         pombity,7       ; identifikace rovnosti 
+                            budiku s casem
+                      00046                                 #define         bzucak          PORTC,2 
+                      00047                                 #define         led                     PORTB,3
+                      00048                                 #define         pled            pombity,6       ; zaloha stavu led
+                      00049 ; new; new
+                      00050                                 #define         t1if            PIR1,TMR1IF
+0000                  00051                                 org             0000h
+0000   2833           00052                                 goto    start
+                      00053 ;       ........................................................................
+                      00054 ;       preruseni
+0004                  00055                                 org     0004h
+0004   082B           00056                                 movf    wreg,W
+                      00057 
+0005   1D0B           00058                                 btfss   toif
+0006   281F           00059                                 goto    TMR1
+                      00060 ; preruseni pro TMR0    
+0007   110B           00061                                 bcf             toif                    ; vynulovani bitu toif
+0008   00AB           00062                                 movwf   wreg
+0009   3001           00063                                 movlw   01h
+000A   0081           00064                                 movwf   TMR0
+                      00065 
+000B   2071           00066                                 call    displej
+                      00067 
+000C   0AA8           00068                                 incf    sec,F                   ; pricte 1 k registrucitace sekund
+000D   30C8           00069                                 movlw   0c8h
+000E   0228           00070                                 subwf   sec,w                   ; odecte od sec 200 a ulozi do W
+000F   1D03           00071                                 btfss   z                               ; je-li z=1, registr sec neprete
+                            kl
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0010   281D           00072                                 goto    pkonec
+                      00073 
+                      00074                                 
+0011   3008           00075                                 movlw   d'8'
+0012   00AA           00076                                 movwf   pre2
+0013   0000           00077                                 nop
+0014   0000           00078                                 nop
+0015   30E9           00079 pr1:                    movlw   d'233'
+0016   00A9           00080                                 movwf   pre1
+0017   0000           00081                                 nop
+Message[305]: Using default destination of 1 (file).
+0018   0BA9           00082 pr0:                    decfsz  pre1
+0019   2818           00083                                 goto    pr0
+Message[305]: Using default destination of 1 (file).
+001A   0BAA           00084                                 decfsz  pre2
+001B   2815           00085                                 goto    pr1
+                      00086 
+001C   209D           00087                                 call    couter
+                      00088 
+                      00089 ; spolecny konec preruseni
+Message[305]: Using default destination of 1 (file).
+001D   08AB           00090 pkonec:                 movf    wreg
+001E   0009           00091                                 retfie  
+                      00092 ; ??????????????????????????????????????????????????????????????????????????????
+                      00093 ; preruseni pro TMR1
+001F   0808           00094 TMR1:                   movf    PORTD,W
+0020   00B1           00095                                 movwf   pred                    ; zaloha PORTD
+                      00096                 ; sdileni
+                      00097 
+0021   1683           00098                                 bsf             rp0
+                      00099 
+0022   30FF           00100                                 movlw   0ffh
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0023   0088           00101                                 movwf   TRISD                   ; PORTD jako vstup
+                      00102 
+0024   1283           00103                                 bcf             rp0
+0025   0808           00104                                 movf    PORTD,W                 ; PORTD do W
+0026   00B0           00105                                 movwf   port                    ; z W do port
+0027   1683           00106                                 bsf             rp0
+                      00107 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0028   0188           00108                                 clrf    TRISD                   ; PORTD jako vystup
+                      00109         
+0029   1283           00110                                 bcf             rp0
+                      00111                 ; konec sdileni         
+002A   0831           00112                                 movf    pred,W
+002B   0088           00113                                 movwf   PORTD                   ; obnova PORTD
+                      00114                 
+002C   1C30           00115                                 btfss   port,0
+002D   20D3           00116                                 call    hodiny
+                      00117 
+002E   1CB0           00118                                 btfss   port,1
+002F   20C5           00119                                 call    minuty
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00120 
+0030   018F           00121                                 clrf    TMR1H
+0031   100C           00122                                 bcf             t1if
+                      00123 
+0032   281D           00124                                 goto    pkonec
+                      00125 ; ??????????????????????????????????????????????????????????????????????????????
+                      00126 ;       ................................................................................................
+                            ..
+                      00127 ;       Inicializace portu
+                      00128 ;       ................................................................................................
+                            ..
+                      00129 
+Warning[207]: Found label after column 1. (start)
+0033   1683           00130   start:        bsf     rp0                             ; nastaveni BANKY1 - STATUS(RP0)
+                      00131                         
+0034   3000           00132                                 movlw   B'00000000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0035   0088           00133                                 movwf   TRISD                   ; portD je vystup
+0036   30E0           00134                                 movlw   b'11100000'             ; nastaveni anod displeje B0,B1,B2,B3 ja
+                            ko vystupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0037   0086           00135                                 movwf   TRISB   
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0038   1107           00136                                 bcf             TRISC,2                 ; bzucak jako vystup    
+0039   30D3           00137                                 movlw   B'11010011'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003A   0081           00138                                 movwf   OPTION_REG              ; konfigurace TMR0 a preddelicky
+003B   168B           00139                                 bsf     toie                    ; povoleni preruseni od TMR0
+                      00140 ; -----------------------------------------------------------------------------
+                      00141 ; new
+003C   170B           00142                                 bsf             INTCON,PEIE             ; povoleni preruseni od periferi
+                            i
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003D   140C           00143                                 bsf             PIE1,TMR1IE             ; povoleni preruseni od tmr1
+                      00144 ; -----------------------------------------------------------------------------
+003E   178B           00145                                 bsf             gie                             ; povoleni globalniho pr
+                            eruseni
+                      00146 
+003F   1283           00147                                 bcf     rp0                             ; nastaveni BANKY0 - STATUS(RP0)
+0040   30FF           00148                                 movlw   0ffh
+0041   0088           00149                                 movwf   PORTD                   ; zhasne vsechny segmenty
+                      00150 
+0042   01A3           00151                                 clrf    disp1                   ; vynuluje registr disp1
+0043   01A5           00152                                 clrf    disp2                   ; vynuluje registr disp2
+0044   01A4           00153                                 clrf    disp3                   ; vynuluje registr disp3
+0045   01A6           00154                                 clrf    disp4                   ; vynuluje registr disp4
+0046   01A7           00155                                 clrf    pordisp                 ; vynulovani poradi displeje
+0047   01A8           00156                                 clrf    sec                             ; vynulovani citace sekund
+0048   01A2           00157                                 clrf    vteriny                 ; vynuluje registr vteriny
+                      00158 
+0049   1586           00159                                 bsf     led
+                      00160 
+004A   3001           00161                                 movlw   1h
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+004B   00B3           00162                                 movwf   budik1
+004C   01B4           00163                                 clrf    budik2
+004D   01B5           00164                                 clrf    budik3
+004E   01B6           00165                                 clrf    budik4
+                      00166 ; ------------------------------------------------------------------------------        
+                      00167 ; new   
+004F   018E           00168                                 clrf    TMR1L                    
+0050   018F           00169                                 clrf    TMR1H
+0051   01B0           00170                                 clrf    port
+0052   01B1           00171                                 clrf    pred
+0053   3003           00172                                 movlw   d'3'
+0054   00B2           00173                                 movwf   cekani                  ; prodlouzeni TMR1
+0055   3001           00174                                 movlw   b'00000001'             ; spusteni TMR1
+0056   0090           00175                                 movwf   T1CON   
+                      00176 ;       ................................................................................................
+                            ..
+0057   1D86           00177 hlprog:                 btfss   led                             ; test na zapnuti
+0058   2857           00178                                 goto    hlprog
+                      00179                                 
+0059   20E9           00180                                 call    porovnej        
+005A   1BA1           00181                                 btfsc   indbzuc                 ; test na rovnost
+005B   285D           00182                                 goto    sirena
+                      00183 
+005C   2857           00184                                 goto    hlprog  
+                      00185 
+Warning[202]: Argument out of range.  Least significant bits used.
+005D   3055           00186 sirena:                 movlw   255h
+005E   00AF           00187                                 movwf   pom2
+005F   30FF           00188 s3:                             movlw   0ffh
+0060   00AE           00189                                 movwf   pom
+Message[305]: Using default destination of 1 (file).
+0061   0BAE           00190 s2:                             decfsz  pom
+0062   2861           00191                                 goto    s2
+Message[305]: Using default destination of 1 (file).
+0063   0BAF           00192                                 decfsz  pom2
+0064   285F           00193                                 goto    s3
+0065   1107           00194 s1:                             bcf             bzucak
+0066   206C           00195                                 call    zpozdeni
+0067   1507           00196                                 bsf             bzucak
+0068   206C           00197                                 call    zpozdeni
+Message[305]: Using default destination of 1 (file).
+0069   0BAC           00198                                 decfsz  reg2
+006A   2865           00199                                 goto    s1
+006B   2857           00200                                 goto    hlprog
+                      00201 
+006C   3050           00202 zpozdeni:               movlw   50h
+006D   00AD           00203                                 movwf   reg1
+Message[305]: Using default destination of 1 (file).
+006E   0BAD           00204 cyk1:                   decfsz  reg1
+006F   286E           00205                                 goto    cyk1
+0070   0008           00206                                 return                                  ; skoci na zacatek smycky
+                      00207 ;       ................................................................................................
+                            ..
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (include)
+                      00208 include "d:\rp\displayled.asm"
+                      00001 ; podprogramy pro vyuziti displaye
+                      00002 ;       zobrazoje obsah registru 23,24,25,26 na LED zobrazovacich
+                      00003 ;       dale vyuziva registry(nutne deklarovat): pordisp,FSR,PORTB,INDF,STATUS
+                      00004 
+0071   1321           00005 displej:                bcf             pled                    ; pomocny bit pled vynuluj
+0072   1986           00006                                 btfsc   led                             ; nesviti led? skoc
+0073   1721           00007                                 bsf             pled                    ; sviti led nastav pled na 1
+                      00008 
+0074   3023           00009                                 movlw   23h                             ; nacte adresu disp1
+0075   0727           00010                                 addwf   pordisp,0               ; 23h + portdisp ulozi do stradace
+0076   0084           00011                                 movwf   FSR                             ; nastaveni neprime adresy
+0077   3017           00012                                 movlw   B'00010111'
+0078   0086           00013                                 movwf   PORTB                   ; zhasnuti anod                 
+0079   0800           00014                                 movf    INDF,0                  ; nacteni hodnoty - neprime adresovani
+                      00015 
+007A   2087           00016                                 call    segment                 ; dekodovani binarniho cisla na sedmiseg
+                            mentovy kod
+007B   0088           00017                                 movwf   PORTD
+                      00018 
+007C   0827           00019                                 movf    pordisp,0               
+007D   2098           00020                                 call    anoda                   ; aktivuje prislusnou anodu
+007E   0086           00021                                 movwf   PORTB                   ; aktivuje spravny display, zhasne led
+                      00022                                 
+007F   1B21           00023                                 btfsc   pled
+0080   1586           00024                                 bsf             led                             ; pokud led sviti rozsvi
+                            t ji
+                      00025                                 
+0081   0AA7           00026                                 incf    pordisp,1               ; zvysi obsah pordisp o 1
+0082   3004           00027                                 movlw   4
+0083   0227           00028                                 subwf   pordisp,0               ; kontroluje zda byly zobrazeny vsechny 
+                            ctyri znaky
+0084   1903           00029                                 btfsc   STATUS,2
+0085   01A7           00030                                 clrf    pordisp                 ; pokud ano vynuluje pocitadlo
+0086   0008           00031                                 return
+                      00032 ;       ................................................................................................
+                            ..
+                      00033 ;       podprogram segment
+0087   0782           00034 segment:                addwf   PCL,1
+0088   34C0           00035                                 RETLW   B'11000000'             ;0
+0089   34F9           00036                                 RETLW   B'11111001'             ;1
+008A   34A4           00037                                 RETLW   B'10100100'             ;2
+008B   34B0           00038                                 RETLW   B'10110000'             ;3
+008C   3499           00039                                 RETLW   B'10011001'             ;4
+008D   3492           00040                                 RETLW   B'10010010'             ;5
+008E   3482           00041                                 RETLW   B'10000010'             ;6
+008F   34F8           00042                                 RETLW   B'11111000'             ;7
+0090   3480           00043                                 RETLW   B'10000000'             ;8
+0091   3490           00044                                 RETLW   B'10010000'             ;9
+0092   3488           00045                                 RETLW   B'10001000'             ;A
+0093   3483           00046                                 RETLW   B'10000011'             ;B
+0094   34C6           00047                                 RETLW   B'11000110'             ;C
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0095   34A1           00048                                 RETLW   B'10100001'             ;D
+0096   3486           00049                                 RETLW   B'10000110'             ;E
+0097   348E           00050                                 RETLW   B'10001110'             ;F
+                      00051 ;       ................................................................................................
+                            ..
+                      00052 ;       podprogram anoda
+0098   0782           00053 anoda:                  addwf   PCL,1
+0099   3416           00054                                 retlw   B'00010110'             ;1 znak displeje
+009A   3413           00055                                 retlw   B'00010011'             ;3 znak displeje
+009B   3415           00056                                 retlw   B'00010101'             ;2 znak displeje
+009C   3407           00057                                 retlw   B'00000111'             ;4 znak displeje
+                      00058 ;       ................................................................................................
+                            ..
+Warning[205]: Found directive in column 1. (include)
+                      00209 include "d:\rp\coutery.asm"
+                      00001 ; podprogramy citani
+                      00002 ;       nutno deklarovat registry: sec,vteriny,disp1,disp2,disp3,disp4
+                      00003 ;       pouzite zarazky: couter,minuty,hodiny
+                      00004 ;       nepouzitelne zarazky: adr4,adr5,adr3,m1,h1,h2,h3
+                      00005 
+                      00006 ;       podprogram couter
+009D   01A8           00007 couter:                 clrf    sec                             ; vynuluje reg sec
+009E   0AA2           00008                                 incf    vteriny,F               ; pricte 1 k registru disp_0 - SUKUNDY
+009F   303C           00009                                 movlw   3ch
+00A0   0222           00010                                 subwf   vteriny,W               ; odecte od vterin sedesat a ulozi do W
+00A1   1C03           00011                                 btfss   c                               ; je-li z=1, disp_0 pretekl pres
+                             9
+00A2   28C4           00012                                 goto    adr3
+                      00013 
+00A3   01A2           00014                                 clrf    vteriny
+00A4   0AA3           00015                                 incf    disp1,F                 ; pricte 1 k registru disp1 - MINUTY
+00A5   300A           00016                                 movlw   0ah
+00A6   0223           00017                                 subwf   disp1,W                 ; odecte od disp1 desitku a ulozi do W
+00A7   1D03           00018                                 btfss   z                               ; je-li c=1, disp1 pretekl pres 
+                            9
+00A8   28C4           00019                                 goto    adr3
+                      00020 
+00A9   01A3           00021                                 clrf    disp1
+00AA   0AA5           00022                                 incf    disp2,F                 ; pricte 1 k registru disp2 - DESITKY MI
+                            NUT
+00AB   3006           00023                                 movlw   6h
+00AC   0225           00024                                 subwf   disp2,W                 ; odecte od disp2 desitku a ulozi do W
+00AD   1D03           00025                                 btfss   z                               ; je-li c=1, disp2 pretekl pres 
+                            5
+00AE   28C4           00026                                 goto    adr3
+                      00027 
+00AF   01A5           00028                                 clrf    disp2
+00B0   0AA4           00029                                 incf    disp3,f                 ; pricte 1 k registru disp3 - HODINY
+00B1   3004           00030                                 movlw   4h                              
+00B2   0224           00031                                 subwf   disp3,w
+00B3   1D03           00032                                 btfss   z                               ; je disp3 vetsi nez 3?
+00B4   28B9           00033                                 goto    adr4                    ; ne
+                      00034 
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00B5   3002           00035                                 movlw   2h                              ; ano
+00B6   0226           00036                                 subwf   disp4,w                 ; pokud ano tak je disp4 vetsi nez 1?
+00B7   1903           00037                                 btfsc   z                               ; 
+00B8   28BD           00038                                 goto    adr5                    ; ano 
+                      00039 
+00B9   300A           00040 adr4                    movlw   0ah                             ; ne
+00BA   0224           00041                                 subwf   disp3,w                 ; odecte od disp3 desitku a ulozi do W
+00BB   1D03           00042                                 btfss   z                               ; je-li c=1, disp3 pretekl pres 
+                            9
+00BC   28C4           00043                                 goto    adr3
+                      00044 
+00BD   01A4           00045 adr5:                   clrf    disp3
+00BE   0AA6           00046                                 incf    disp4,f                 ; pricte 1 k registru disp4 - DESITKY HO
+                            DIN
+00BF   3003           00047                                 movlw   3h
+00C0   0226           00048                                 subwf   disp4,w                 ; odecte od disp4 desitku a ulozi do W
+00C1   1D03           00049                                 btfss   z                               ; je-li c=1, disp4 pretekl pres 
+                            9
+00C2   28C4           00050                                 goto    adr3
+00C3   01A6           00051                                 clrf    disp4
+00C4   0008           00052 adr3:                   return
+                      00053 ; ------------------------------------------------------------------------------------
+00C5   01A2           00054 minuty:                 clrf    vteriny
+                      00055 
+00C6   0AA3           00056                                 incf    disp1,F                 ; pricte 1 k registru disp1 - MINUTY
+00C7   300A           00057                                 movlw   0ah
+00C8   0223           00058                                 subwf   disp1,W                 ; odecte od disp1 desitku a ulozi do W
+00C9   1D03           00059                                 btfss   z                               ; je-li c=1, disp1 pretekl pres 
+                            9
+00CA   28D2           00060                                 goto    m1
+                      00061 
+00CB   01A3           00062                                 clrf    disp1
+00CC   0AA5           00063                                 incf    disp2,F                 ; pricte 1 k registru disp2 - DESITKY MI
+                            NUT
+00CD   3006           00064                                 movlw   6h
+00CE   0225           00065                                 subwf   disp2,W                 ; odecte od disp2 desitku a ulozi do W
+00CF   1D03           00066                                 btfss   z                               ; je-li c=1, disp2 pretekl pres 
+                            5
+00D0   28D2           00067                                 goto    m1
+                      00068 
+00D1   01A5           00069                                 clrf    disp2
+00D2   0008           00070 m1:                     return
+                      00071 ; ------------------------------------------------------------------------------
+00D3   01A2           00072 hodiny:                 clrf    vteriny
+                      00073 
+00D4   0AA4           00074                                 incf    disp3,F                 ; pricte 1 k registru disp3 - HODINY
+00D5   3004           00075                                 movlw   4h                              
+00D6   0224           00076                                 subwf   disp3,W
+00D7   1D03           00077                                 btfss   z                               ; je disp3 vetsi nez 3?
+00D8   28DD           00078                                 goto    h2                              ; ne
+                      00079 
+00D9   3002           00080                                 movlw   2h                              ; ano
+00DA   0226           00081                                 subwf   disp4,W                 ; pokud ano tak je disp4 vetsi nez 1?
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00DB   1903           00082                                 btfsc   z                               ; 
+00DC   28E1           00083                                 goto    h3                              ; ano 
+                      00084 
+00DD   300A           00085 h2:                             movlw   0ah                             ; ne
+00DE   0224           00086                                 subwf   disp3,W                 ; odecte od disp3 desitku a ulozi do W
+00DF   1D03           00087                                 btfss   z                               ; je-li c=1, disp3 pretekl pres 
+                            9
+00E0   28E8           00088                                 goto    h1
+                      00089 
+00E1   01A4           00090 h3:                             clrf    disp3
+00E2   0AA6           00091                                 incf    disp4,F                 ; pricte 1 k registru disp4 - DESITKY HO
+                            DIN
+00E3   3003           00092                                 movlw   3h
+00E4   0226           00093                                 subwf   disp4,W                 ; odecte od disp4 desitku a ulozi do W
+00E5   1D03           00094                                 btfss   z                               ; je-li c=1, disp4 pretekl pres 
+                            9
+00E6   28E8           00095                                 goto    h1
+00E7   01A6           00096                                 clrf    disp4
+00E8   0008           00097 h1:                     return
+                      00210 ;       ................................................................................................
+                            ..
+                      00211 ; ***************************************************************************************
+00E9   0833           00212 porovnej:               movf    budik1,W
+00EA   0223           00213                                 subwf   disp1,W
+00EB   1D03           00214                                 btfss   z
+00EC   28FB           00215                                 goto    endpor1                 ; nerovno -skoc a nastava indbzuc na 0
+                      00216 
+00ED   0834           00217                                 movf    budik2,W
+00EE   0225           00218                                 subwf   disp2,W
+00EF   1D03           00219                                 btfss   z
+00F0   28FB           00220                                 goto    endpor1                 ; nerovno -skoc a nastava indbzuc na 0
+                      00221                                 
+00F1   0835           00222                                 movf    budik3,W
+00F2   0224           00223                                 subwf   disp3,W
+00F3   1D03           00224                                 btfss   z
+00F4   28FB           00225                                 goto    endpor1                 ; nerovno -skoc a nastava indbzuc na 0
+                      00226 
+00F5   0836           00227                                 movf    budik4,W
+00F6   0226           00228                                 subwf   disp4,W
+00F7   1D03           00229                                 btfss   z
+00F8   28FB           00230                                 goto    endpor1                 ; nerovno -skoc a nastava indbzuc na 0
+                      00231                                 
+00F9   17A1           00232                                 bsf             indbzuc                 ; rovno nastav indbzuc na 1
+00FA   28FC           00233                                 goto    endpor2                 ; preskoc vynulovani indbzuc
+                      00234 
+00FB   13A1           00235 endpor1:                bcf             indbzuc                 ; vynuluj indbzuc
+                      00236                                 
+00FC   0008           00237 endpor2:        return                          
+                      00238 
+                      00239                                 end
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1                              0000001F
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+adr3                              000000C4
+adr4                              000000B9
+adr5                              000000BD
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+anoda                             00000098
+budik1                            00000033
+budik2                            00000034
+budik3                            00000035
+budik4                            00000036
+bzucak                            PORTC,2
+c                                 STATUS,0
+cekani                            00000032
+couter                            0000009D
+cyk1                              0000006E
+disp1                             00000023
+disp2                             00000025
+disp3                             00000024
+disp4                             00000026
+displej                           00000071
+endpor1                           000000FB
+endpor2                           000000FC
+gie                               INTCON,7
+h1                                000000E8
+h2                                000000DD
+h3                                000000E1
+hlprog                            00000057
+hodiny                            000000D3
+indbzuc                           pombity,7
+led                               PORTB,3
+m1                                000000D2
+minuty                            000000C5
+pkonec                            0000001D
+pled                              pombity,6
+pom                               0000002E
+pom2                              0000002F
+pombity                           00000021
+pordisp                           00000027
+porovnej                          000000E9
+port                              00000030
+pr0                               00000018
+pr1                               00000015
+pre1                              00000029
+pre2                              0000002A
+pred                              00000031
+reg1                              0000002D
+reg2                              0000002C
+rp0                               STATUS,5
+s1                                00000065
+s2                                00000061
+s3                                0000005F
+sec                               00000028
+segment                           00000087
+sirena                            0000005D
+start                             00000033
+t1if                              PIR1,TMR1IF
+toie                              INTCON,5
+toif                              INTCON,2
+MPASM 03.70 Released                               HSNBNB.ASM   5-1-2006  15:27:30         PAGE 16
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+vteriny                           00000022
+wreg                              0000002B
+z                                 STATUS,2
+zpozdeni                          0000006C
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXX---
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   250
+Program Memory Words Free:  7942
+
+
+Errors   :     0
+Warnings :    26 reported,     0 suppressed
+Messages :    14 reported,     0 suppressed
+
+

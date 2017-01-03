@@ -1,0 +1,27 @@
+Warning[207] D:\RP\HPS\HODSNAST.ASM 11 : Found label after column 1. (disp1)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 12 : Found label after column 1. (disp2)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 13 : Found label after column 1. (disp3)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 14 : Found label after column 1. (disp4)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 15 : Found label after column 1. (pordisp)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 16 : Found label after column 1. (sec)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 17 : Found label after column 1. (vteriny)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 19 : Found label after column 1. (reg1)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 20 : Found label after column 1. (reg2)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 21 : Found label after column 1. (pre1)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 22 : Found label after column 1. (pre2)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 23 : Found label after column 1. (wreg)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 24 : Found label after column 1. (testd)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 26 : Found label after column 1. (cekani)
+Warning[207] D:\RP\HPS\HODSNAST.ASM 27 : Found label after column 1. (pPORTD)
+Message[305] D:\RP\HPS\HODSNAST.ASM 64 : Using default destination of 1 (file).
+Message[302] D:\RP\HPS\HODSNAST.ASM 77 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HPS\HODSNAST.ASM 78 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HPS\HODSNAST.ASM 85 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HPS\HODSNAST.ASM 86 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[207] D:\RP\HPS\HODSNAST.ASM 106 : Found label after column 1. (start)
+Message[302] D:\RP\HPS\HODSNAST.ASM 108 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HPS\HODSNAST.ASM 110 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HPS\HODSNAST.ASM 112 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HPS\HODSNAST.ASM 115 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] D:\RP\HPS\HODSNAST.ASM 138 : Found directive in column 1. (include)
+Warning[205] D:\RP\HPS\HODSNAST.ASM 139 : Found directive in column 1. (include)

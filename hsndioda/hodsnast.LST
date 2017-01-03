@@ -1,0 +1,765 @@
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;*****************************************************************************************************
+                      00002 ;  hodiny s nastavenim
+                      00003 ;*****************************************************************************************************
+                      00004 ;       ................................................................................................
+                            ..
+                      00005 ;       Definice symbolu
+                      00006 ;       ................................................................................................
+                            ..
+                      00007                                 list            p=16F877A                               ; deklarece proc
+                            esoru
+                      00008                                 include         "d:\p16f877a.inc"               ; deklarece registru
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00398         LIST
+2007   3F31           00009                                 __config        3F31h                                   ; konfiguracni p
+                            ojistky
+                      00010 ;       ................................................................................................
+                            ..
+Warning[207]: Found label after column 1. (vteriny)
+  00000030            00011                                 vteriny         equ             30h
+Warning[207]: Found label after column 1. (disp1)
+  00000023            00012                                 disp1           equ             23h
+Warning[207]: Found label after column 1. (disp2)
+  00000025            00013                                 disp2           equ             25h
+Warning[207]: Found label after column 1. (disp3)
+  00000024            00014                                 disp3           equ             24h
+Warning[207]: Found label after column 1. (disp4)
+  00000026            00015                                 disp4           equ             26h
+Warning[207]: Found label after column 1. (pordisp)
+  00000027            00016                                 pordisp         equ             27h
+Warning[207]: Found label after column 1. (sec)
+  00000028            00017                                 sec                     equ             28h
+                      00018 
+Warning[207]: Found label after column 1. (reg1)
+  0000002A            00019                                 reg1            equ             2ah
+Warning[207]: Found label after column 1. (reg2)
+  0000002B            00020                                 reg2            equ             2bh
+Warning[207]: Found label after column 1. (pre1)
+  0000002C            00021                                 pre1            equ             2ch
+Warning[207]: Found label after column 1. (pre2)
+  0000002D            00022                                 pre2            equ             2dh
+Warning[207]: Found label after column 1. (wreg)
+  0000002E            00023                                 wreg            equ             2eh             
+Warning[207]: Found label after column 1. (port)
+  0000002F            00024                                 port            equ             2fh
+                      00025 
+Warning[207]: Found label after column 1. (cekani)
+  00000032            00026                                 cekani          equ             32h     
+                      00027 ;       ................................................................................................
+                            ..
+                      00028                                 #define         rp0             STATUS,5                ; volba stranky 
+                            pameti dat
+                      00029                                 #define         c               STATUS,0                ; carry
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00030                                 #define         z               STATUS,2                ; zero
+                      00031                                 #define         toif    INTCON,2                ; indikace preteceni TMR
+                            0
+                      00032                                 #define     toie        INTCON,5
+                      00033                                 #define         gie             INTCON,7
+                      00034                                 #define         led             PORTB,3
+0000                  00035                                 org             0000h
+0000   2838           00036                                 goto    start
+                      00037 ;       ........................................................................
+                      00038 ;       preruseni
+0004                  00039                                 org     0004h
+0004   00AE           00040                                 movwf   wreg
+0005   1D0B           00041                                 btfss   toif
+0006   2811           00042                                 goto    preruseni2      
+                      00043 ;   pretuseni od TMR0
+0007   110B           00044                                 bcf             toif                    ; vynulovani bitu toif
+0008   0181           00045                                 clrf    TMR0
+                      00046 
+0009   2055           00047                                 call    displej
+                      00048 
+000A   0AA8           00049                                 incf    sec,F                   ; pricte 1 k registrucitace sekund
+000B   30C8           00050                                 movlw   d'200'
+000C   0228           00051                                 subwf   sec,W                   ; odecte od sec 200 a ulozi do W
+000D   1D03           00052                                 btfss   z                               ; je-li z=1, registr sec neprete
+                            kl
+000E   2832           00053                                 goto    intend
+                      00054 
+000F   207C           00055                                 call    couter
+                      00056 
+                      00057 
+0010   2832           00058                                 goto    intend
+                      00059 
+                      00060 ;       preruseni od TMR1
+0011   100C           00061 preruseni2:             bcf             PIR1,TMR1IF
+0012   018E           00062                                 clrf    TMR1L
+0013   018F           00063                                 clrf    TMR1H
+Message[305]: Using default destination of 1 (file).
+0014   0BB2           00064                                 decfsz  cekani
+0015   2832           00065                                 goto    intend
+0016   3003           00066                                 movlw   d'3'
+0017   00B2           00067                                 movwf   cekani
+                      00068                 ; sdileni
+0018   1487           00069                                 bsf             PORTC,1                 ; deaktivace bargrafu
+0019   1683           00070                                 bsf     rp0                             ; banka1
+                      00071 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001A   1408           00072                                 bsf             TRISD,0                 ; nastaveni TL0 jako vstupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001B   1488           00073                                 bsf             TRISD,1                 ; nastaveni TL1 jako vstupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001C   1508           00074                                 bsf             TRISD,2                 ; nastaveni TL2 jako vstupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001D   1588           00075                                 bsf             TRISD,3                 ; nastaveni TL3 jako vstupu
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00076                 
+001E   1283           00077                                 bcf             rp0                             ; banka0
+001F   0808           00078                                 movf    PORTD,W                 ; nacteni tlacitek a ulozeni do reg port
+0020   00AF           00079                                 movwf   port
+0021   1683           00080                                 bsf     rp0                             ; banka1
+                      00081 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0022   1008           00082                                 bcf             TRISD,0                 ; nastaveni TL0 jako vystupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0023   1088           00083                                 bcf             TRISD,1                 ; nastaveni TL1 jako vystupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0024   1108           00084                                 bcf             TRISD,2                 ; nastaveni TL2 jako vystupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0025   1188           00085                                 bcf             TRISD,3                 ; nastaveni TL3 jako vystupu
+                      00086                         
+0026   1283           00087                                 bcf             rp0                             ; banka0
+0027   1087           00088                                 bcf     PORTC,1                 ; aktivace anod BARGRAFU
+                      00089 
+                      00090         ; test tlacitek
+0028   192F           00091                                 btfsc   port,2                  ; pokud je stiskle TL2 neguj zapnuti bud
+                            iku
+0029   282E           00092                                 goto    jmpled                  ; neni stiskle  preskoc         
+002A   1D86           00093                                 btfss   led                             ; sviti led?
+002B   2834           00094                                 goto    rozsvitled              ; ne - rozsvit
+002C   1986           00095                                 btfsc   led                             ; ano sviti-nesviti led?
+002D   2836           00096                                 goto    zhasniled               ; ne - zhasni
+                      00097         
+002E   1C2F           00098 jmpled:                 btfss   port,0                  ; neni stiskle?
+002F   20B2           00099                                 call    hodiny
+                      00100                 
+0030   1CAF           00101                                 btfss   port,1                  ; neni stiskle?
+0031   20A4           00102                                 call    minuty
+                      00103 
+0032   082E           00104 intend:                 movf    wreg,W
+0033   0009           00105                                 retfie
+                      00106 ; ................................
+0034   1586           00107 rozsvitled:             bsf             led                             ; rozsvit led
+0035   282E           00108                                 goto    jmpled                  ; preskoc na dalsi tl
+                      00109 ; ................................                              
+0036   1186           00110 zhasniled:              bcf             led                             ; zhasni led
+0037   282E           00111                                 goto    jmpled                  ; preskoc na dalsi tl
+                      00112 ; ................................
+                      00113 ;       ................................................................................................
+                            ..
+                      00114 ;       Inicializace portu
+                      00115 ;       ................................................................................................
+                            ..
+                      00116 
+Warning[207]: Found label after column 1. (start)
+0038   1683           00117   start:        bsf     rp0                             ; nastaveni BANKY1 - STATUS(RP0)
+                      00118                         
+0039   3000           00119                                 movlw   B'00000000'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+003A   0088           00120                                 movwf   TRISD                   ; portD je vystup
+003B   30E0           00121                                 movlw   b'11100000'             ; nastaveni anod displeje B0,B1,B2,B3 ja
+                            ko vystupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003C   0086           00122                                 movwf   TRISB           
+003D   30D3           00123                                 movlw   B'11010011'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003E   0081           00124                                 movwf   OPTION_REG              ; konfigurace TMR0 a preddelicky
+003F   168B           00125                                 bsf     toie                    ; povoleni preruseni od TMR0
+0040   178B           00126                                 bsf             gie                             ; povoleni globalniho pr
+                            eruseni
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0041   140C           00127                                 bsf             PIE1,TMR1IE             ; povoleni preruseni od tmr1
+0042   170B           00128                                 bsf             INTCON,PEIE
+                      00129 
+0043   1283           00130                                 bcf     rp0                             ; nastaveni BANKY0 - STATUS(RP0)
+0044   30FF           00131                                 movlw   0ffh
+0045   0088           00132                                 movwf   PORTD                   ; zhasne vsechny segmenty
+                      00133 
+0046   01A3           00134                                 clrf    disp1                   ; vynuluje registr disp1
+0047   01A5           00135                                 clrf    disp2                   ; vynuluje registr disp2
+0048   01A4           00136                                 clrf    disp3                   ; vynuluje registr disp3
+0049   01A6           00137                                 clrf    disp4                   ; vynuluje registr disp4
+004A   01A7           00138                                 clrf    pordisp                 ; vynulovani poradi displeje
+004B   01A8           00139                                 clrf    sec                             ; vynulovani citace sekund
+004C   01B0           00140                                 clrf    vteriny                 ; vynuluje registr vteriny
+004D   018E           00141                                 clrf    TMR1L                    
+004E   018F           00142                                 clrf    TMR1H   
+004F   3004           00143                                 movlw   d'4'
+0050   00B2           00144                                 movwf   cekani           
+0051   3001           00145                                 movlw   b'00000001'             ; spusteni TMR1
+0052   0090           00146                                 movwf   T1CON
+0053   01AF           00147                                 clrf    port
+                      00148 ;       ................................................................................................
+                            ..
+                      00149 
+0054   2854           00150 adr0:                   goto    adr0                    ; skoci na zacatek smycky
+                      00151 
+                      00152 ;       ................................................................................................
+                            ..
+                      00153 
+0055   3023           00154 displej:                movlw   23h                             ; nacte adresu disp1
+0056   0727           00155                                 addwf   pordisp,0               ; 23h + portdisp ulozi do stradace
+0057   0084           00156                                 movwf   FSR                             ; nastaveni neprime adresy
+0058   3017           00157                                 movlw   B'00010111'
+0059   0086           00158                                 movwf   PORTB                   ; zhasnuti anod                 
+005A   0800           00159                                 movf    INDF,0                  ; nacteni hodnoty - neprime adresovani
+                      00160 
+005B   2066           00161                                 call    segment                 ; dekodovani binarniho cisla na sedmiseg
+                            mentovy kod
+005C   0088           00162                                 movwf   PORTD
+                      00163 
+005D   0827           00164                                 movf    pordisp,0               
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+005E   2077           00165                                 call    anoda                   ; aktivuje prislusnou anodu
+                      00166 
+005F   0086           00167                                 movwf   PORTB
+0060   0AA7           00168                                 incf    pordisp,1               ; zvysi obsah pordisp o 1
+0061   3004           00169                                 movlw   4
+0062   0227           00170                                 subwf   pordisp,0               ; kontroluje zda byly zobrazeny vsechny 
+                            ctyri znaky
+0063   1903           00171                                 btfsc   STATUS,2
+0064   01A7           00172                                 clrf    pordisp                 ; pokud ano vynuluje pocitadlo
+0065   0008           00173                                 return
+                      00174 ;       ................................................................................................
+                            ..
+                      00175 ;       podprogram segment
+0066   0782           00176 segment:                addwf   PCL,1
+0067   34C0           00177                                 RETLW   B'11000000'             ;0
+0068   34F9           00178                                 RETLW   B'11111001'             ;1
+0069   34A4           00179                                 RETLW   B'10100100'             ;2
+006A   34B0           00180                                 RETLW   B'10110000'             ;3
+006B   3499           00181                                 RETLW   B'10011001'             ;4
+006C   3492           00182                                 RETLW   B'10010010'             ;5
+006D   3482           00183                                 RETLW   B'10000010'             ;6
+006E   34F8           00184                                 RETLW   B'11111000'             ;7
+006F   3480           00185                                 RETLW   B'10000000'             ;8
+0070   3490           00186                                 RETLW   B'10010000'             ;9
+0071   3488           00187                                 RETLW   B'10001000'             ;A
+0072   3483           00188                                 RETLW   B'10000011'             ;B
+0073   34C6           00189                                 RETLW   B'11000110'             ;C
+0074   34A1           00190                                 RETLW   B'10100001'             ;D
+0075   3486           00191                                 RETLW   B'10000110'             ;E
+0076   348E           00192                                 RETLW   B'10001110'             ;F
+                      00193 ;       ................................................................................................
+                            ..
+                      00194 ;       podprogram anoda
+0077   0782           00195 anoda:                  addwf   PCL,1
+0078   3416           00196                                 retlw   B'00010110'             ;1 znak displeje
+0079   3413           00197                                 retlw   B'00010011'             ;3 znak displeje
+007A   3415           00198                                 retlw   B'00010101'             ;2 znak displeje
+007B   3407           00199                                 retlw   B'00000111'             ;4 znak displeje
+                      00200 ;       ................................................................................................
+                            ..
+                      00201 ;       podprogram couter
+007C   01A8           00202 couter:                 clrf    sec                             ; vynuluje reg sec
+007D   0AB0           00203                                 incf    vteriny,F               ; pricte 1 k registru disp_0 - SUKUNDY
+007E   303C           00204                                 movlw   3ch
+007F   0230           00205                                 subwf   vteriny,W               ; odecte od vterin sedesat a ulozi do W
+0080   1C03           00206                                 btfss   c                               ; je-li z=1, disp_0 pretekl pres
+                             9
+0081   28A3           00207                                 goto    adr3
+                      00208 
+0082   01B0           00209                                 clrf    vteriny
+0083   0AA3           00210                                 incf    disp1,F                 ; pricte 1 k registru disp1 - MINUTY
+0084   300A           00211                                 movlw   0ah
+0085   0223           00212                                 subwf   disp1,W                 ; odecte od disp1 desitku a ulozi do W
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0086   1D03           00213                                 btfss   z                               ; je-li c=1, disp1 pretekl pres 
+                            9
+0087   28A3           00214                                 goto    adr3
+                      00215 
+0088   01A3           00216                                 clrf    disp1
+0089   0AA5           00217                                 incf    disp2,F                 ; pricte 1 k registru disp2 - DESITKY MI
+                            NUT
+008A   3006           00218                                 movlw   6h
+008B   0225           00219                                 subwf   disp2,W                 ; odecte od disp2 desitku a ulozi do W
+008C   1D03           00220                                 btfss   z                               ; je-li c=1, disp2 pretekl pres 
+                            5
+008D   28A3           00221                                 goto    adr3
+                      00222 
+008E   01A5           00223                                 clrf    disp2
+008F   0AA4           00224                                 incf    disp3,f                 ; pricte 1 k registru disp3 - HODINY
+0090   3004           00225                                 movlw   4h                              
+0091   0224           00226                                 subwf   disp3,w
+0092   1D03           00227                                 btfss   z                               ; je disp3 vetsi nez 3?
+0093   2898           00228                                 goto    adr4                    ; ne
+                      00229 
+0094   3002           00230                                 movlw   2h                              ; ano
+0095   0226           00231                                 subwf   disp4,w                 ; pokud ano tak je disp4 vetsi nez 1?
+0096   1903           00232                                 btfsc   z                               ; 
+0097   289C           00233                                 goto    adr5                    ; ano 
+                      00234 
+0098   300A           00235 adr4                    movlw   0ah                             ; ne
+0099   0224           00236                                 subwf   disp3,w                 ; odecte od disp3 desitku a ulozi do W
+009A   1D03           00237                                 btfss   z                               ; je-li c=1, disp3 pretekl pres 
+                            9
+009B   28A3           00238                                 goto    adr3
+                      00239 
+009C   01A4           00240 adr5:                   clrf    disp3
+009D   0AA6           00241                                 incf    disp4,f                 ; pricte 1 k registru disp4 - DESITKY HO
+                            DIN
+009E   3003           00242                                 movlw   3h
+009F   0226           00243                                 subwf   disp4,w                 ; odecte od disp4 desitku a ulozi do W
+00A0   1D03           00244                                 btfss   z                               ; je-li c=1, disp4 pretekl pres 
+                            9
+00A1   28A3           00245                                 goto    adr3
+00A2   01A6           00246                                 clrf    disp4
+00A3   0008           00247 adr3:                   return
+                      00248 ; ------------------------------------------------------------------------------------
+00A4   01B0           00249 minuty:                 clrf    vteriny
+                      00250 
+00A5   0AA3           00251                                 incf    disp1,F                 ; pricte 1 k registru disp1 - MINUTY
+00A6   300A           00252                                 movlw   0ah
+00A7   0223           00253                                 subwf   disp1,W                 ; odecte od disp1 desitku a ulozi do W
+00A8   1D03           00254                                 btfss   z                               ; je-li c=1, disp1 pretekl pres 
+                            9
+00A9   28B1           00255                                 goto    m1
+                      00256 
+00AA   01A3           00257                                 clrf    disp1
+00AB   0AA5           00258                                 incf    disp2,F                 ; pricte 1 k registru disp2 - DESITKY MI
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                            NUT
+00AC   3006           00259                                 movlw   6h
+00AD   0225           00260                                 subwf   disp2,W                 ; odecte od disp2 desitku a ulozi do W
+00AE   1D03           00261                                 btfss   z                               ; je-li c=1, disp2 pretekl pres 
+                            5
+00AF   28B1           00262                                 goto    m1
+                      00263 
+00B0   01A5           00264                                 clrf    disp2
+00B1   0008           00265 m1:                             return
+                      00266 ; ------------------------------------------------------------------------------
+00B2   01B0           00267 hodiny:                 clrf    vteriny
+                      00268 
+00B3   0AA4           00269                                 incf    disp3,F                 ; pricte 1 k registru disp3 - HODINY
+00B4   3004           00270                                 movlw   4h                              
+00B5   0224           00271                                 subwf   disp3,W
+00B6   1D03           00272                                 btfss   z                               ; je disp3 vetsi nez 3?
+00B7   28BC           00273                                 goto    h4                              ; ne
+                      00274 
+00B8   3002           00275                                 movlw   2h                              ; ano
+00B9   0226           00276                                 subwf   disp4,W                 ; pokud ano tak je disp4 vetsi nez 1?
+00BA   1903           00277                                 btfsc   z                               ; 
+00BB   28C0           00278                                 goto    h5                              ; ano 
+                      00279 
+00BC   300A           00280 h4                              movlw   0ah                             ; ne
+00BD   0224           00281                                 subwf   disp3,W                 ; odecte od disp3 desitku a ulozi do W
+00BE   1D03           00282                                 btfss   z                               ; je-li c=1, disp3 pretekl pres 
+                            9
+00BF   28C7           00283                                 goto    h3
+                      00284 
+00C0   01A4           00285 h5:                             clrf    disp3
+00C1   0AA6           00286                                 incf    disp4,F                 ; pricte 1 k registru disp4 - DESITKY HO
+                            DIN
+00C2   3003           00287                                 movlw   3h
+00C3   0226           00288                                 subwf   disp4,W                 ; odecte od disp4 desitku a ulozi do W
+00C4   1D03           00289                                 btfss   z                               ; je-li c=1, disp4 pretekl pres 
+                            9
+00C5   28C7           00290                                 goto    h3
+00C6   01A6           00291                                 clrf    disp4
+00C7   0008           00292 h3:                             return
+                      00293                                 end
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+adr0                              00000054
+adr3                              000000A3
+adr4                              00000098
+adr5                              0000009C
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+anoda                             00000077
+c                                 STATUS,0
+cekani                            00000032
+couter                            0000007C
+disp1                             00000023
+disp2                             00000025
+disp3                             00000024
+disp4                             00000026
+displej                           00000055
+gie                               INTCON,7
+h3                                000000C7
+h4                                000000BC
+h5                                000000C0
+hodiny                            000000B2
+intend                            00000032
+jmpled                            0000002E
+led                               PORTB,3
+m1                                000000B1
+minuty                            000000A4
+pordisp                           00000027
+port                              0000002F
+pre1                              0000002C
+pre2                              0000002D
+preruseni2                        00000011
+reg1                              0000002A
+reg2                              0000002B
+rozsvitled                        00000034
+rp0                               STATUS,5
+sec                               00000028
+segment                           00000066
+start                             00000038
+toie                              INTCON,5
+toif                              INTCON,2
+vteriny                           00000030
+wreg                              0000002E
+z                                 STATUS,2
+zhasniled                         00000036
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXX-------- ---------------- ---------------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   197
+Program Memory Words Free:  7995
+
+MPASM 03.70 Released                             HODSNAST.ASM   4-27-2006  19:17:39         PAGE 14
+
+
+
+
+
+
+Errors   :     0
+Warnings :    15 reported,     0 suppressed
+Messages :    13 reported,     0 suppressed
+
+

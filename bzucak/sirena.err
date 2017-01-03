@@ -1,0 +1,14 @@
+Warning[207] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 4 : Found label after column 1. (reg2)
+Warning[207] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 5 : Found label after column 1. (reg1)
+Warning[207] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 6 : Found label after column 1. (pom)
+Warning[207] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 7 : Found label after column 1. (pom2)
+Warning[207] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 8 : Found label after column 1. (TRISC)
+Warning[207] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 9 : Found label after column 1. (PORTC)
+Warning[207] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 10 : Found label after column 1. (STATUS)
+Message[302] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 16 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[202] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 19 : Argument out of range.  Least significant bits used.
+Warning[202] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 22 : Argument out of range.  Least significant bits used.
+Message[305] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 26 : Using default destination of 1 (file).
+Message[305] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 28 : Using default destination of 1 (file).
+Message[305] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 34 : Using default destination of 1 (file).
+Message[305] A:\ROCNIKOVA PRACE\BZUCAK\SIRENA.ASM 41 : Using default destination of 1 (file).

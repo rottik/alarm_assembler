@@ -1,0 +1,22 @@
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 11 : Found label after column 1. (vteriny)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 12 : Found label after column 1. (disp1)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 13 : Found label after column 1. (disp2)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 14 : Found label after column 1. (disp3)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 15 : Found label after column 1. (disp4)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 16 : Found label after column 1. (pordisp)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 17 : Found label after column 1. (sec)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 19 : Found label after column 1. (reg1)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 20 : Found label after column 1. (reg2)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 21 : Found label after column 1. (pre1)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 22 : Found label after column 1. (pre2)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 23 : Found label after column 1. (wreg)
+Warning[203] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 52 : Found opcode in column 1. (nop)
+Warning[203] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 53 : Found opcode in column 1. (nop)
+Warning[203] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 56 : Found opcode in column 1. (nop)
+Message[305] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 57 : Using default destination of 1 (file).
+Message[305] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 59 : Using default destination of 1 (file).
+Message[305] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 64 : Using default destination of 1 (file).
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 70 : Found label after column 1. (start)
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 73 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 75 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\HODINY\LEKCE18.ASM 77 : Register in operand not in bank 0.  Ensure that bank bits are correct.

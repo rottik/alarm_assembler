@@ -1,0 +1,40 @@
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 11 : Found label after column 1. (vteriny)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 12 : Found label after column 1. (disp1)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 13 : Found label after column 1. (disp2)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 14 : Found label after column 1. (disp3)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 15 : Found label after column 1. (disp4)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 16 : Found label after column 1. (pordisp)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 17 : Found label after column 1. (sec)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 19 : Found label after column 1. (pre1)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 20 : Found label after column 1. (pre2)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 21 : Found label after column 1. (wreg)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 23 : Found label after column 1. (pombity)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 24 : Found label after column 1. (reg2)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 25 : Found label after column 1. (reg1)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 26 : Found label after column 1. (pom)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 27 : Found label after column 1. (pom2)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 29 : Found label after column 1. (budik1)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 30 : Found label after column 1. (budik2)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 31 : Found label after column 1. (budik3)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 32 : Found label after column 1. (budik4)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 34 : Found label after column 1. (port)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 35 : Found label after column 1. (pred)
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 36 : Found label after column 1. (cekani)
+Message[305] D:\RP\HSNBNB\POKUS.ASM 83 : Using default destination of 1 (file).
+Message[305] D:\RP\HSNBNB\POKUS.ASM 85 : Using default destination of 1 (file).
+Message[305] D:\RP\HSNBNB\POKUS.ASM 91 : Using default destination of 1 (file).
+Message[302] D:\RP\HSNBNB\POKUS.ASM 103 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HSNBNB\POKUS.ASM 116 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[207] D:\RP\HSNBNB\POKUS.ASM 167 : Found label after column 1. (start)
+Message[302] D:\RP\HSNBNB\POKUS.ASM 170 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HSNBNB\POKUS.ASM 172 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HSNBNB\POKUS.ASM 173 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HSNBNB\POKUS.ASM 175 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HSNBNB\POKUS.ASM 180 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[202] D:\RP\HSNBNB\POKUS.ASM 223 : Argument out of range.  Least significant bits used.
+Message[305] D:\RP\HSNBNB\POKUS.ASM 227 : Using default destination of 1 (file).
+Message[305] D:\RP\HSNBNB\POKUS.ASM 229 : Using default destination of 1 (file).
+Message[305] D:\RP\HSNBNB\POKUS.ASM 235 : Using default destination of 1 (file).
+Message[305] D:\RP\HSNBNB\POKUS.ASM 241 : Using default destination of 1 (file).
+Warning[205] D:\RP\HSNBNB\POKUS.ASM 245 : Found directive in column 1. (include)
+Warning[205] D:\RP\HSNBNB\POKUS.ASM 246 : Found directive in column 1. (include)

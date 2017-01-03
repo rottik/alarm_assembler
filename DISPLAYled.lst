@@ -1,0 +1,127 @@
+MPASM 03.70 Released                           DISPLAYLED.ASM   5-1-2006  12:16:03         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ; podprogramy pro vyuziti displaye
+                      00002 ;       zobrazoje obsah registru 23,24,25,26 na LED zobrazovacich
+                      00003 ;       dale vyuziva registry(nutne deklarovat): pordisp,FSR,PORTB,INDF,STATUS
+                      00004 
+Error[113]  : Symbol not previously defined (pled)
+Error[128]  : Missing argument(s)
+0000   1000           00005 displej:                bcf             pled                    ; pomocny bit pled vynuluj
+Error[113]  : Symbol not previously defined (led)
+Error[128]  : Missing argument(s)
+0001   1800           00006                                 btfsc   led                             ; nesviti led? skoc
+Error[113]  : Symbol not previously defined (pled)
+Error[128]  : Missing argument(s)
+0002   1400           00007                                 bsf             pled                    ; sviti led nastav pled na 1
+                      00008 
+0003   3023           00009                                 movlw   23h                             ; nacte adresu disp1
+Error[113]  : Symbol not previously defined (pordisp)
+0004   0700           00010                                 addwf   pordisp,0               ; 23h + portdisp ulozi do stradace
+Error[113]  : Symbol not previously defined (FSR)
+0005   0080           00011                                 movwf   FSR                             ; nastaveni neprime adresy
+0006   3017           00012                                 movlw   B'00010111'
+Error[113]  : Symbol not previously defined (PORTB)
+0007   0080           00013                                 movwf   PORTB                   ; zhasnuti anod                 
+Error[113]  : Symbol not previously defined (INDF)
+0008   0800           00014                                 movf    INDF,0                  ; nacteni hodnoty - neprime adresovani
+                      00015 
+0009   2016           00016                                 call    segment                 ; dekodovani binarniho cisla na sedmiseg
+                            mentovy kod
+Error[113]  : Symbol not previously defined (PORTD)
+000A   0080           00017                                 movwf   PORTD
+                      00018 
+Error[113]  : Symbol not previously defined (pordisp)
+000B   0800           00019                                 movf    pordisp,0               
+000C   2027           00020                                 call    anoda                   ; aktivuje prislusnou anodu
+Error[113]  : Symbol not previously defined (PORTB)
+000D   0080           00021                                 movwf   PORTB                   ; aktivuje spravny display, zhasne led
+                      00022                                 
+Error[113]  : Symbol not previously defined (pled)
+Error[128]  : Missing argument(s)
+000E   1800           00023                                 btfsc   pled
+Error[113]  : Symbol not previously defined (led)
+Error[128]  : Missing argument(s)
+000F   1400           00024                                 bsf             led                             ; pokud led sviti rozsvi
+                            t ji
+                      00025                                 
+Error[113]  : Symbol not previously defined (pordisp)
+0010   0A80           00026                                 incf    pordisp,1               ; zvysi obsah pordisp o 1
+0011   3004           00027                                 movlw   4
+Error[113]  : Symbol not previously defined (pordisp)
+0012   0200           00028                                 subwf   pordisp,0               ; kontroluje zda byly zobrazeny vsechny 
+                            ctyri znaky
+Error[113]  : Symbol not previously defined (STATUS)
+0013   1900           00029                                 btfsc   STATUS,2
+Error[113]  : Symbol not previously defined (pordisp)
+MPASM 03.70 Released                           DISPLAYLED.ASM   5-1-2006  12:16:03         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0014   0180           00030                                 clrf    pordisp                 ; pokud ano vynuluje pocitadlo
+0015   0008           00031                                 return
+                      00032 ;       ................................................................................................
+                            ..
+                      00033 ;       podprogram segment
+Error[113]  : Symbol not previously defined (PCL)
+0016   0780           00034 segment:                addwf   PCL,1
+0017   34C0           00035                                 RETLW   B'11000000'             ;0
+0018   34F9           00036                                 RETLW   B'11111001'             ;1
+0019   34A4           00037                                 RETLW   B'10100100'             ;2
+001A   34B0           00038                                 RETLW   B'10110000'             ;3
+001B   3499           00039                                 RETLW   B'10011001'             ;4
+001C   3492           00040                                 RETLW   B'10010010'             ;5
+001D   3482           00041                                 RETLW   B'10000010'             ;6
+001E   34F8           00042                                 RETLW   B'11111000'             ;7
+001F   3480           00043                                 RETLW   B'10000000'             ;8
+0020   3490           00044                                 RETLW   B'10010000'             ;9
+0021   3488           00045                                 RETLW   B'10001000'             ;A
+0022   3483           00046                                 RETLW   B'10000011'             ;B
+0023   34C6           00047                                 RETLW   B'11000110'             ;C
+0024   34A1           00048                                 RETLW   B'10100001'             ;D
+0025   3486           00049                                 RETLW   B'10000110'             ;E
+0026   348E           00050                                 RETLW   B'10001110'             ;F
+                      00051 ;       ................................................................................................
+                            ..
+                      00052 ;       podprogram anoda
+Error[113]  : Symbol not previously defined (PCL)
+0027   0780           00053 anoda:                  addwf   PCL,1
+0028   3416           00054                                 retlw   B'00010110'             ;1 znak displeje
+0029   3413           00055                                 retlw   B'00010011'             ;3 znak displeje
+002A   3415           00056                                 retlw   B'00010101'             ;2 znak displeje
+002B   3407           00057                                 retlw   B'00000111'             ;4 znak displeje
+                      00058 ;       ................................................................................................
+                            ..
+Error[129]  : Expected (END)
+MPASM 03.70 Released                           DISPLAYLED.ASM   5-1-2006  12:16:03         PAGE  3
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+__16F877A                         00000001
+anoda                             00000027
+displej                           00000000
+segment                           00000016
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXX---- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    44
+Program Memory Words Free:  8148
+
+
+Errors   :    24
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

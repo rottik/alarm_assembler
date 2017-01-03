@@ -1,0 +1,23 @@
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 10 : Found label after column 1. (port)
+Warning[207] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 11 : Found label after column 1. (pred)
+Message[305] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 21 : Using default destination of 1 (file).
+Error[113]   A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 22 : Symbol not previously defined (predport)
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 27 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 28 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 29 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 30 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 33 : Using default destination of 1 (file).
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 37 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 38 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 39 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 40 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 51 : Using default destination of 1 (file).
+Error[113]   A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 51 : Symbol not previously defined (predport)
+Error[113]   A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 53 : Symbol not previously defined (predport)
+Message[305] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 58 : Using default destination of 1 (file).
+Error[113]   A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 58 : Symbol not previously defined (predport)
+Error[113]   A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 60 : Symbol not previously defined (predport)
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 79 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 80 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 81 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Error[113]   A:\ROCNIKOVA PRACE18.3.2006\TLACITKA\LEKCE19.ASM 94 : Symbol not previously defined (predport)

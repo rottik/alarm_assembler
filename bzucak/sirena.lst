@@ -1,0 +1,111 @@
+MPASM  4.02 Released                               SIRENA.ASM   1-30-2006  8:35:52         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001         list            p=16F877A       
+2007   3F31           00002         __config        3F31h   
+                      00003         
+Warning[207]: Found label after column 1. (reg2)
+  00000020            00004         reg2    equ             20h
+Warning[207]: Found label after column 1. (reg1)
+  00000021            00005         reg1    equ             21h
+Warning[207]: Found label after column 1. (pom)
+  00000022            00006         pom             equ             22h
+Warning[207]: Found label after column 1. (pom2)
+  00000023            00007         pom2    equ             23h
+Warning[207]: Found label after column 1. (TRISC)
+  00000087            00008         TRISC   equ             87h
+Warning[207]: Found label after column 1. (PORTC)
+  00000007            00009         PORTC   equ             07h
+Warning[207]: Found label after column 1. (STATUS)
+  00000003            00010         STATUS  equ             03h
+                      00011 #define         rp0                     STATUS,5
+                      00012 #define         bzucak          PORTC,2
+                      00013 
+                      00014 
+0000   1683           00015 Start:          bsf     rp0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0001   1107           00016                         bcf             TRISC,2 
+0002   1283           00017                         bcf     rp0
+0003   1107           00018                         bcf             PORTC,2
+Warning[202]: Argument out of range.  Least significant bits used.
+0004   3055           00019                         movlw   255h
+0005   00A0           00020                         movwf   reg2
+                      00021 
+Warning[202]: Argument out of range.  Least significant bits used.
+0006   3055           00022 sirena:         movlw   255h
+0007   00A3           00023                         movwf   pom2
+0008   30FF           00024 s3:                     movlw   0ffh
+0009   00A2           00025                         movwf   pom
+Message[305]: Using default destination of 1 (file).
+000A   0BA2           00026 s2:                     decfsz  pom
+000B   280A           00027                         goto    s2
+Message[305]: Using default destination of 1 (file).
+000C   0BA3           00028                         decfsz  pom2
+000D   2808           00029                         goto    s3
+000E   1107           00030 s1:                     bcf             bzucak
+000F   2015           00031                         call    zpozdeni
+0010   1507           00032                         bsf             bzucak
+0011   2015           00033                         call    zpozdeni
+Message[305]: Using default destination of 1 (file).
+0012   0BA0           00034                         decfsz  reg2
+0013   280E           00035                         goto    s1
+0014   2806           00036                         goto    sirena
+                      00037 
+0015                  00038 zpozdeni:
+0015   3050           00039                         movlw           50h
+0016   00A1           00040                         movwf           reg1
+MPASM  4.02 Released                               SIRENA.ASM   1-30-2006  8:35:52         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Message[305]: Using default destination of 1 (file).
+0017   0BA1           00041 cyk1:           decfsz          reg1
+0018   2817           00042                         goto            cyk1
+0019   0008           00043                         return
+                      00044                         end
+MPASM  4.02 Released                               SIRENA.ASM   1-30-2006  8:35:52         PAGE  3
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PORTC                             00000007
+STATUS                            00000003
+Start                             00000000
+TRISC                             00000087
+__16F877A                         00000001
+bzucak                            PORTC,2
+cyk1                              00000017
+pom                               00000022
+pom2                              00000023
+reg1                              00000021
+reg2                              00000020
+rp0                               STATUS,5
+s1                                0000000E
+s2                                0000000A
+s3                                00000008
+sirena                            00000006
+zpozdeni                          00000015
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXX------ ---------------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    26
+Program Memory Words Free:  8166
+
+
+Errors   :     0
+Warnings :     9 reported,     0 suppressed
+Messages :     5 reported,     0 suppressed
+
+

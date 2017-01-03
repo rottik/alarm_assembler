@@ -1,0 +1,469 @@
+MPASM  5.01                       LEKCE19.ASM   3-24-2006  9:55:24         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;*******************************************************************************
+                      00002 ;  Priklad 19 - SDILENI TLACITKA - indikace tlacitka tl3  led0
+                      00003 ;*******************************************************************************
+                      00004 ;       Definice symbolu    
+                      00005 ;       ............................................................................
+                      00006                                 list            p=16F877A                               ; deklarece proc
+                            esoru
+                      00007                                 include         "a:\p16f877a.inc"               ; deklarece registru
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00398         LIST
+2007   3F31           00008                                 __config        3F31h                                   ; konfiguracni p
+                            ojistky
+                      00009 
+Warning[207]: Found label after column 1. (port)
+  00000030            00010                                 port            equ             30h
+Warning[207]: Found label after column 1. (pred)
+  00000031            00011                                 pred            equ             31h
+                      00012                                 #define         rp0             STATUS,5                ; volba stranky 
+                            pameti dat
+0000                  00013                                 org             0000h
+0000   2830           00014                                 goto    start
+                      00015 ;       ............................................................................
+                      00016 ;       preruseni
+0004                  00017                                 org             0004h
+0004   100C           00018                                 bcf             PIR1,TMR1IF
+0005   018E           00019                                 clrf    TMR1L
+0006   018F           00020                                 clrf    TMR1H
+Message[305]: Using default destination of 1 (file).
+0007   0888           00021                                 movf    PORTD
+Error[113]  : Symbol not previously defined (predport)
+0008   0080           00022                                 movwf   predport
+                      00023                 ; sdileni
+0009   1487           00024                                 bsf             PORTC,1                 ; deaktivace bargrafu
+000A   1683           00025                                 bsf     rp0                             ; banka1
+                      00026 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000B   1408           00027                                 bsf             TRISD,0                 ; nastaveni TL0 jako vstupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000C   1488           00028                                 bsf             TRISD,1                 ; nastaveni TL1 jako vstupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000D   1508           00029                                 bsf             TRISD,2                 ; nastaveni TL2 jako vstupu     
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000E   1588           00030                                 bsf             TRISD,3         ; nastaveni TL3 jako vstupu
+                      00031                         
+000F   1283           00032                                 bcf             rp0                             ; banka0
+Message[305]: Using default destination of 1 (file).
+0010   0888           00033                                 movf    PORTD                   ; nacteni tlacitek a ulozeni do reg port
+0011   00B0           00034                                 movwf   port
+0012   1683           00035                                 bsf     rp0                             ; banka1
+                      00036 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0013   1008           00037                                 bcf             TRISD,0                 ; nastaveni TL0 jako vystupu
+MPASM  5.01                       LEKCE19.ASM   3-24-2006  9:55:24         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0014   1088           00038                                 bcf             TRISD,1                 ; nastaveni TL1 jako vystupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0015   1108           00039                                 bcf             TRISD,2                 ; nastaveni TL2 jako vystupu
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0016   1188           00040                                 bcf             TRISD,3                 ; nastaveni TL3 jako vystupu
+                      00041                         
+0017   1283           00042                                 bcf             rp0                             ; banka0
+0018   1087           00043                                 bcf     PORTC,1                 ; aktivace anod BARGRAFU
+                      00044 
+                      00045         ; test tlacitek
+0019   30FF           00046                                 movlw   0ffh
+001A   0088           00047                                 movwf   PORTD
+                      00048                         
+001B   1930           00049                                 btfsc   port,2                  ; pokud je stiskle TL2 neguj zapnuti bud
+                            iku
+001C   2821           00050                                 goto    pres1                   ; neni stiskle  preskoc         
+Message[305]: Using default destination of 1 (file).
+Error[113]  : Symbol not previously defined (predport)
+001D   0880           00051                                 movf    predport
+001E   3A04           00052                                 xorlw   b'00000100'
+Error[113]  : Symbol not previously defined (predport)
+001F   0080           00053                                 movwf   predport
+0020   0088           00054                                 movwf   PORTD
+                      00055         
+0021   19B0           00056 pres1:                  btfsc   port,3
+0022   2827           00057                                 goto    pres2
+Message[305]: Using default destination of 1 (file).
+Error[113]  : Symbol not previously defined (predport)
+0023   0880           00058                                 movf    predport
+0024   3A08           00059                                 xorlw   b'00001000'
+Error[113]  : Symbol not previously defined (predport)
+0025   0080           00060                                 movwf   predport
+0026   0088           00061                                 movwf   PORTD
+                      00062 
+0027   1830           00063 pres2:                  btfsc   port,0                  ; nastaveni LED0 podle stavu tlacitka   
+0028   1788           00064                     bsf         PORTD,7                         
+0029   1C30           00065                                 btfss   port,0                  ; neni stiskle?
+002A   1388           00066                                 bcf             PORTD,7
+                      00067                 
+002B   18B0           00068                                 btfsc   port,1                  ; nastaveni LED1 podle stavu tlacitka   
+002C   1708           00069                                 bsf             PORTD,6                         
+002D   1CB0           00070                                 btfss   port,1                  ; neni stiskle?
+002E   1308           00071                                 bcf             PORTD,6
+                      00072 
+002F   0009           00073                                 retfie
+                      00074                                 
+                      00075 ;       .....................................................................................
+                      00076 ;       Inicializace portu
+0030   1683           00077 start:                  bsf     rp0                             ; banka1
+                      00078 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0031   1087           00079                                 bcf             TRISC,1                 ; nastav bit C1 jako vystup -  n
+MPASM  5.01                       LEKCE19.ASM   3-24-2006  9:55:24         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                            apojen BARGRAF
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0032   0188           00080                                 clrf    TRISD                   ; bargraf pouzit
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0033   140C           00081                                 bsf             PIE1,TMR1IE             ; povoleni preruseni od tmr1
+0034   170B           00082                                 bsf             INTCON,PEIE
+0035   178B           00083                                 bsf             INTCON,GIE      
+                      00084 
+0036   1283           00085                                 bcf             rp0                             ; banka0
+                      00086         
+0037   30FF           00087                                 movlw   0ffh                    ; nastaveni vsech katod BARGRAFU - po za
+                            pnuti anod
+0038   0088           00088                                 movwf   PORTD                   ; se LED nerozsviti
+0039   018E           00089                                 clrf    TMR1L                    
+003A   018F           00090                                 clrf    TMR1H                    
+003B   3001           00091                                 movlw   b'00000001'             ; spusteni TMR1
+003C   0090           00092                                 movwf   T1CON
+003D   01B0           00093                                 clrf    port
+Error[113]  : Symbol not previously defined (predport)
+003E   0180           00094                                 clrf    predport
+003F   283F           00095 hp:                             goto    hp
+                      00096 
+                      00097                                 end
+MPASM  5.01                       LEKCE19.ASM   3-24-2006  9:55:24         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+MPASM  5.01                       LEKCE19.ASM   3-24-2006  9:55:24         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+MPASM  5.01                       LEKCE19.ASM   3-24-2006  9:55:24         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+MPASM  5.01                       LEKCE19.ASM   3-24-2006  9:55:24         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+MPASM  5.01                       LEKCE19.ASM   3-24-2006  9:55:24         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+hp                                0000003F
+port                              00000030
+pred                              00000031
+pres1                             00000021
+MPASM  5.01                       LEKCE19.ASM   3-24-2006  9:55:24         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+pres2                             00000027
+rp0                               STATUS,5
+start                             00000030
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    61
+Program Memory Words Free:  8131
+
+
+Errors   :     6
+Warnings :     2 reported,     0 suppressed
+Messages :    15 reported,     0 suppressed
+
+

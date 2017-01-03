@@ -1,0 +1,28 @@
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 11 : Found label after column 1. (vteriny)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 12 : Found label after column 1. (disp1)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 13 : Found label after column 1. (disp2)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 14 : Found label after column 1. (disp3)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 15 : Found label after column 1. (disp4)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 16 : Found label after column 1. (pordisp)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 17 : Found label after column 1. (sec)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 19 : Found label after column 1. (reg1)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 20 : Found label after column 1. (reg2)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 21 : Found label after column 1. (pre1)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 22 : Found label after column 1. (pre2)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 23 : Found label after column 1. (wreg)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 24 : Found label after column 1. (port)
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 26 : Found label after column 1. (cekani)
+Message[305] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 64 : Using default destination of 1 (file).
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 72 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 73 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 74 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 75 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 82 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 83 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 84 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 85 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[207] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 117 : Found label after column 1. (start)
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 120 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 122 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 124 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\ROCNIKOVA PRACE18.3.2006\HSNDIODA\HODSNAST.ASM 127 : Register in operand not in bank 0.  Ensure that bank bits are correct.

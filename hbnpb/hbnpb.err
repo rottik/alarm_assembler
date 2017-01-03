@@ -1,0 +1,33 @@
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 11 : Found label after column 1. (vteriny)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 12 : Found label after column 1. (disp1)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 13 : Found label after column 1. (disp2)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 14 : Found label after column 1. (disp3)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 15 : Found label after column 1. (disp4)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 16 : Found label after column 1. (pordisp)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 17 : Found label after column 1. (sec)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 19 : Found label after column 1. (pre1)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 20 : Found label after column 1. (pre2)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 21 : Found label after column 1. (wreg)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 23 : Found label after column 1. (pombity)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 24 : Found label after column 1. (reg2)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 25 : Found label after column 1. (reg1)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 26 : Found label after column 1. (pom)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 27 : Found label after column 1. (pom2)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 29 : Found label after column 1. (budik1)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 30 : Found label after column 1. (budik2)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 31 : Found label after column 1. (budik3)
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 32 : Found label after column 1. (budik4)
+Message[305] D:\RP\HBNPB\HBNPB.ASM 72 : Using default destination of 1 (file).
+Message[305] D:\RP\HBNPB\HBNPB.ASM 74 : Using default destination of 1 (file).
+Message[305] D:\RP\HBNPB\HBNPB.ASM 79 : Using default destination of 1 (file).
+Warning[207] D:\RP\HBNPB\HBNPB.ASM 85 : Found label after column 1. (start)
+Message[302] D:\RP\HBNPB\HBNPB.ASM 88 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HBNPB\HBNPB.ASM 90 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HBNPB\HBNPB.ASM 91 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\RP\HBNPB\HBNPB.ASM 93 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[202] D:\RP\HBNPB\HBNPB.ASM 126 : Argument out of range.  Least significant bits used.
+Message[305] D:\RP\HBNPB\HBNPB.ASM 130 : Using default destination of 1 (file).
+Message[305] D:\RP\HBNPB\HBNPB.ASM 132 : Using default destination of 1 (file).
+Message[305] D:\RP\HBNPB\HBNPB.ASM 138 : Using default destination of 1 (file).
+Message[305] D:\RP\HBNPB\HBNPB.ASM 144 : Using default destination of 1 (file).
+Warning[205] D:\RP\HBNPB\HBNPB.ASM 148 : Found directive in column 1. (include)

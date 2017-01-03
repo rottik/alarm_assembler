@@ -1,0 +1,553 @@
+MPASM 03.70 Released                             TLACITKA.ASM   5-1-2006  17:35:27         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;*******************************************************************************
+                      00002 ;  Priklad 19 - SDILENI TLACITKA - indikace tlacitka tl3  led0
+                      00003 ;*******************************************************************************
+                      00004 ;       Definice symbolu    
+                      00005 ;       ............................................................................
+                      00006                                 list            p=16F877A                               ; deklarece proc
+                            esoru
+                      00007                                 include         "d:\p16f877a.inc"               ; deklarece registru
+                      00001         LIST
+                      00002 ; P16F877A.INC  Standard Header File, Version 1.00    Microchip Technology, Inc.
+                      00398         LIST
+2007   3F31           00008                                 __config        3F31h                                   ; konfiguracni p
+                            ojistky
+                      00009 
+                      00010 
+Warning[207]: Found label after column 1. (pombity)
+  00000033            00011                                 pombity         equ             33h
+Warning[207]: Found label after column 1. (reg2)
+  00000034            00012                                 reg2            equ             34h
+Warning[207]: Found label after column 1. (reg1)
+  00000035            00013                                 reg1            equ             35h
+Warning[207]: Found label after column 1. (pom)
+  00000036            00014                                 pom                     equ             36h
+Warning[207]: Found label after column 1. (pom2)
+  00000037            00015                                 pom2            equ             37h
+Warning[207]: Found label after column 1. (port)
+  00000038            00016                                 port            equ             38h
+Warning[207]: Found label after column 1. (pred)
+  00000039            00017                                 pred            equ             39h
+Warning[207]: Found label after column 1. (cekani)
+  0000003A            00018                                 cekani          equ             3ah
+                      00019                                 #define         rp0             STATUS,5                ; volba stranky 
+                            pameti dat¨
+                      00020                                 #define         led             PORTB,3
+                      00021                                 #define         indbzuc         pombity,7
+                      00022                                 #define         bzucak          PORTC,2
+                      00023 ;               W               0
+                      00024 ;               F               1
+0000                  00025                                 org             0000h
+0000   283B           00026                                 goto    start
+                      00027 ;       ............................................................................
+                      00028 ;       preruseni
+0004                  00029                                 org             0004h
+0004   100C           00030                                 bcf             PIR1,TMR1IF             ; shozeni pir1
+0005   018E           00031                                 clrf    TMR1L
+0006   018F           00032                                 clrf    TMR1H                   ; reset TMR1
+Message[305]: Using default destination of 1 (file).
+0007   0BBA           00033                                 decfsz  cekani
+0008   2832           00034                                 goto    intend
+0009   3006           00035                                 movlw   d'6'
+000A   00BA           00036                                 movwf   cekani
+000B   0808           00037                                 movf    PORTD,W
+000C   00B9           00038                                 movwf   pred                    ; zaloha PORTuD
+MPASM 03.70 Released                             TLACITKA.ASM   5-1-2006  17:35:27         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00039                 ; sdileni
+000D   1487           00040                                 bsf             PORTC,1                 ; deaktivace bargrafu
+000E   30FF           00041                                 movlw   0ffh                    ; nastaveni vsech katod BARGRAFU - po za
+                            pnuti anod
+000F   0088           00042                                 movwf   PORTD                   ; se LED nerozsviti
+0010   1683           00043                                 bsf     rp0                             ; banka1
+                      00044 
+0011   30FF           00045                                 movlw   0ffh
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0012   0088           00046                                 movwf   TRISD           ; nastaveni TL jako vstupu
+                      00047                         
+0013   1283           00048                                 bcf             rp0                             ; banka0
+0014   0808           00049                                 movf    PORTD,W                 ; nacteni tlacitek a ulozeni do reg port
+0015   00B8           00050                                 movwf   port
+0016   1683           00051                                 bsf     rp0                             ; banka1
+                      00052 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0017   0188           00053                                 clrf    TRISD                   ; nastaveni TL jako vystupu
+                      00054                         
+0018   1283           00055                                 bcf             rp0                             ; banka0
+0019   0839           00056                                 movf    pred,W
+001A   0088           00057                                 movwf   PORTD
+001B   1087           00058                                 bcf     PORTC,1                 ; aktivace anod BARGRAFU
+                      00059 
+                      00060         ; test tlacitek
+001C   30FF           00061                                 movlw   0ffh
+001D   0088           00062                                 movwf   PORTD
+001E   1938           00063                                 btfsc   port,2                  ; pokud je stiskle TL2 neguj zapnuti bud
+                            iku
+001F   2824           00064                                 goto    pres1                   ; neni stiskle  preskoc         
+0020   1D86           00065                                 btfss   led                             ; sviti led?
+0021   2833           00066                                 goto    rozsvitled                              ; ne - rozsvit
+0022   1986           00067                                 btfsc   led                             ; ano sviti-nesviti led?
+0023   2835           00068                                 goto    zhasniled                               ; ne - zhasni
+                      00069         
+0024   19B8           00070 pres1:                  btfsc   port,3                  ; 
+0025   282A           00071                                 goto    pres2                   ;       
+0026   1FB3           00072                                 btfss   indbzuc                 ; bzuci?
+0027   2837           00073                                 goto    bzuc                    ; ne - bzuc
+0028   1BB3           00074                                 btfsc   indbzuc                 ; ano bzuci-nebzuc?
+0029   2839           00075                                 goto    nebzuc                  ; ne - nebzuc
+                      00076 
+002A   1838           00077 pres2:                  btfsc   port,0                  ; nastaveni LED0 podle stavu tlacitka   
+002B   1788           00078                     bsf         PORTD,7                         
+002C   1C38           00079                                 btfss   port,0                  ; neni stiskle?
+002D   1388           00080                                 bcf             PORTD,7
+                      00081                 
+002E   18B8           00082                                 btfsc   port,1                  ; nastaveni LED1 podle stavu tlacitka   
+002F   1708           00083                                 bsf             PORTD,6                         
+0030   1CB8           00084                                 btfss   port,1                  ; neni stiskle?
+0031   1308           00085                                 bcf             PORTD,6
+                      00086 
+0032   0009           00087 intend:                 retfie
+MPASM 03.70 Released                             TLACITKA.ASM   5-1-2006  17:35:27         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00088 ; ................................
+0033   1586           00089 rozsvitled:             bsf             led                             ; rozsvit led
+0034   2824           00090                                 goto    pres1                   ; preskoc na dalsi tl
+                      00091 ; ................................                              
+0035   1186           00092 zhasniled:              bcf             led                             ; zhasni led
+0036   2824           00093                                 goto    pres1                   ; preskoc na dalsi tl
+                      00094 ; ................................
+0037   17B3           00095 bzuc:                   bsf             indbzuc 
+0038   282A           00096                                 goto    pres2
+                      00097 ; ................................
+0039   13B3           00098 nebzuc:                 bcf             indbzuc
+003A   282A           00099                                 goto    pres2
+                      00100 ;       .....................................................................................
+                      00101 ;       Inicializace portu
+003B   1683           00102 start:                  bsf     rp0                             ; banka1
+                      00103 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003C   1087           00104                                 bcf             TRISC,1                 ; nastav bit C1 jako vystup -  n
+                            apojen BARGRAF
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003D   1186           00105                                 bcf     TRISB,3                 ; nastav led jako vystup
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003E   0188           00106                                 clrf    TRISD                   ; bargraf pouzit
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+003F   1107           00107                                 bcf             TRISC,2                 ; bzucak jako vystup
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0040   140C           00108                                 bsf             PIE1,TMR1IE             ; povoleni preruseni od tmr1
+0041   170B           00109                                 bsf             INTCON,PEIE             ; povoleni preruseni od periferi
+                            i
+0042   178B           00110                                 bsf             INTCON,GIE              ; globalni
+                      00111 
+0043   1283           00112                                 bcf             rp0                             ; banka0
+                      00113         
+0044   30FF           00114                                 movlw   0ffh                    ; nastaveni vsech katod BARGRAFU - po za
+                            pnuti anod
+0045   0088           00115                                 movwf   PORTD                   ; se LED nerozsviti
+0046   018E           00116                                 clrf    TMR1L                    
+0047   018F           00117                                 clrf    TMR1H                    
+0048   3001           00118                                 movlw   b'00000001'             ; spusteni TMR1
+0049   0090           00119                                 movwf   T1CON
+004A   01B8           00120                                 clrf    port
+004B   01B9           00121                                 clrf    pred
+004C   1087           00122                                 bcf             PORTC,1                 ; aktivace bargrafu
+004D   3006           00123                                 movlw   d'6'
+004E   00BA           00124                                 movwf   cekani                  ; prodlouzeni TMR1
+Warning[202]: Argument out of range.  Least significant bits used.
+004F   3055           00125                                 movlw   255h
+0050   00B4           00126                                 movwf   reg2
+                      00127 
+0051   1BB3           00128 hlavni:                 btfsc   indbzuc
+0052   2854           00129                                 goto    sirena
+0053   2851           00130                                 goto    hlavni  
+                      00131 
+MPASM 03.70 Released                             TLACITKA.ASM   5-1-2006  17:35:27         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[202]: Argument out of range.  Least significant bits used.
+0054   3055           00132 sirena:                 movlw   255h
+0055   00B7           00133                                 movwf   pom2
+0056   30FF           00134 s3:                             movlw   0ffh
+0057   00B6           00135                                 movwf   pom
+Message[305]: Using default destination of 1 (file).
+0058   0BB6           00136 s2:                             decfsz  pom
+0059   2858           00137                                 goto    s2
+Message[305]: Using default destination of 1 (file).
+005A   0BB7           00138                                 decfsz  pom2
+005B   2856           00139                                 goto    s3
+005C   1107           00140 s1:                             bcf             bzucak
+005D   2063           00141                                 call    zpozdeni
+005E   1507           00142                                 bsf             bzucak
+005F   2063           00143                                 call    zpozdeni
+Message[305]: Using default destination of 1 (file).
+0060   0BB4           00144                                 decfsz  reg2
+0061   285C           00145                                 goto    s1
+0062   2851           00146                                 goto    hlavni
+                      00147 
+0063   3050           00148 zpozdeni:               movlw           50h
+0064   00B5           00149                                 movwf           reg1
+Message[305]: Using default destination of 1 (file).
+0065   0BB5           00150 cyk1:                   decfsz          reg1
+0066   2865           00151                                 goto            cyk1
+0067   0008           00152                                 return
+                      00153                                 end
+MPASM 03.70 Released                             TLACITKA.ASM   5-1-2006  17:35:27         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+MPASM 03.70 Released                             TLACITKA.ASM   5-1-2006  17:35:27         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+MPASM 03.70 Released                             TLACITKA.ASM   5-1-2006  17:35:27         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+R                                 00000002
+RBIE                              00000003
+RBIF                              00000000
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+MPASM 03.70 Released                             TLACITKA.ASM   5-1-2006  17:35:27         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+MPASM 03.70 Released                             TLACITKA.ASM   5-1-2006  17:35:27         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISB                             00000086
+TRISC                             00000087
+TRISD                             00000088
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_HS_OSC                           00003FFE
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+bzuc                              00000037
+bzucak                            PORTC,2
+cekani                            0000003A
+cyk1                              00000065
+MPASM 03.70 Released                             TLACITKA.ASM   5-1-2006  17:35:27         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+hlavni                            00000051
+indbzuc                           pombity,7
+intend                            00000032
+led                               PORTB,3
+nebzuc                            00000039
+pom                               00000036
+pom2                              00000037
+pombity                           00000033
+port                              00000038
+pred                              00000039
+pres1                             00000024
+pres2                             0000002A
+reg1                              00000035
+reg2                              00000034
+rozsvitled                        00000033
+rp0                               STATUS,5
+s1                                0000005C
+s2                                00000058
+s3                                00000056
+sirena                            00000054
+start                             0000003B
+zhasniled                         00000035
+zpozdeni                          00000063
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXX-------- ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   101
+Program Memory Words Free:  8091
+
+
+Errors   :     0
+Warnings :    10 reported,     0 suppressed
+Messages :    12 reported,     0 suppressed
+
+
